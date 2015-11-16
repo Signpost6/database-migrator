@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<project name="RDB - Project Build File" default="help">
+    <target name="help">
+        <java classname="org.apache.tools.ant.Main">
+            <arg value="-projecthelp"/>
+            <arg value="-buildfile"/>
+            <arg value="${ant.file}"/>
+        </java>
+    </target>
+
+    <target name="db:clean" description="Cleans the entire database (deletes all data and users)">
+        <exec dir="${basedir}" executable="mvn.bat" failonerror="true">
+            <arg value="clean"/>
+            <arg value="compile"/>
+            <arg value="exec:java"/>
+            <arg value="-Dexec.mainClass=db.DbMigrate"/>
+            <arg value="-Dexec.args=--url jdbc:h2:./target/db/data;MODE=PostgreSQL clean"/>
+        </exec>
+    </target>
+    <target name="db:migrate" description="Cleans the entire database (deletes all data and users)">
+        <exec dir="${basedir}" executable="mvn.bat" failonerror="true">
+            <arg value="clean"/>
+            <arg value="compile"/>
+            <arg value="exec:java"/>
+            <arg value="-Dexec.mainClass=db.DbMigrate"/>
+            <arg value="-Dexec.args=--url jdbc:h2:./target/db/data;MODE=PostgreSQL migrate"/>
+        </exec>
+    </target>
+    <target name="db:reset" description="Drops and recreates schema running all migrations">
+        <exec dir="${basedir}" executable="mvn.bat" failonerror="true">
+            <arg value="clean"/>
+            <arg value="compile"/>
+            <arg value="exec:java"/>
+            <arg value="-Dexec.mainClass=db.DbMigrate"/>
+            <arg value="-Dexec.args=--url jdbc:h2:./target/db/data;MODE=PostgreSQL drop init migrate"/>
+        </exec>
+    </target>
+     
+</project>
